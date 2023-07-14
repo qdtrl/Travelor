@@ -1,0 +1,13 @@
+//
+//  Config.xcconfig
+//  DT_Quentin_Travel-Application_052023
+//
+//  Created by Quentin Dubut-Touroul on 14/07/2023.
+//
+
+// Configuration settings file format documentation can be found at:
+// https://help.apple.com/xcode/#/dev745c5c974
+
+CURRENCY_API_KEY = NhoacjPHhHDw9QpHYelYZqIQPx4yGWPZ
+TRANSLATE_API_KEY = AIzaSyAz_F6PBxu0hMsoOZrrHcN-YGMx_Kj1T6I
+WEATHER_API_KEY = ee8f150d7ccd338c58f5cf605a85862d

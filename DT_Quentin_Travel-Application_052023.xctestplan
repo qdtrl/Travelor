@@ -1,0 +1,29 @@
+{
+  "configurations" : [
+    {
+      "id" : "7B85E0D0-9112-4CA9-9E5D-3746B3885E48",
+      "name" : "Test Scheme Action",
+      "options" : {
+
+      }
+    }
+  ],
+  "defaultOptions" : {
+    "targetForVariableExpansion" : {
+      "containerPath" : "container:DT_Quentin_Travel-Application_052023.xcodeproj",
+      "identifier" : "3CBA0AA02A06A4B400D56173",
+      "name" : "DT_Quentin_Travel-Application_052023"
+    }
+  },
+  "testTargets" : [
+    {
+      "parallelizable" : true,
+      "target" : {
+        "containerPath" : "container:DT_Quentin_Travel-Application_052023.xcodeproj",
+        "identifier" : "3C2218D02A475E7E00863F52",
+        "name" : "DT_Quentin_Travel-Application_052023Tests"
+      }
+    }
+  ],
+  "version" : 1
+}
