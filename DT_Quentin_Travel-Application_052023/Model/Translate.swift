@@ -106,8 +106,6 @@ class TranslateService {
             return
         }
         
-        print(key)
-
         urlComponents.queryItems = [
             URLQueryItem(name: "q", value: text),
             URLQueryItem(name: "target", value: target),

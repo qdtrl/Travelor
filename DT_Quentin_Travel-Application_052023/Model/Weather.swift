@@ -87,9 +87,7 @@ class WeatherService {
             print("API key does not exist")
             return
         }
-        
-        print(key)
-        
+                
         guard let url = URL(string: apiURLBase + "lat=\(lat)&lon=\(lon)&appid=\(key)&units=metric") else {
             return
         }
