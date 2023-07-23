@@ -74,6 +74,23 @@ class TranslateTest: XCTestCase {
         wait(for: [expectation], timeout: 0.01)
     }
     
+    func testGetTranslationShouldPostFailedCallBackIfNilData() {
+        // Given
+        let translationService = TranslateService(
+            session: URLSessionFake(data: nil,
+                                    response: FakeResponseData.responseOK,
+                                    error: nil))
+        
+        
+        let expectation = XCTestExpectation(description: "Wait for queue change.")
+        translationService.getTranslationTo(text: text, target: target) { (success, translation) in
+                                            // Then
+                                            XCTAssertFalse(success)
+                                            XCTAssertNil(translation)
+                                            expectation.fulfill()
+        }
+    }
+    
     // Tests getTranslation - When all Ok
     func testGetTranslationShouldPostSuccessCallbackIfNoErrorAndCorrectData() {
         // Given
@@ -165,6 +182,24 @@ class TranslateTest: XCTestCase {
         }
 
         wait(for: [expectation], timeout: 0.01)
+    }
+    
+    func testGetLanguageShouldPostFailedCallBackIfNilData() {
+        // Given
+        let translationService = TranslateService(
+            session: URLSessionFake(data: nil,
+                                    response: FakeResponseData.responseOK,
+                                    error: nil))
+
+        // When
+        let expectation = XCTestExpectation(description: "Wait for queue change.")
+        translationService.getLanguages { (success, languages) in
+            // Then
+            XCTAssertFalse(success)
+            XCTAssertNil(languages)
+            expectation.fulfill()
+        }
+
     }
     
     // Tests getLanguage - When all Ok

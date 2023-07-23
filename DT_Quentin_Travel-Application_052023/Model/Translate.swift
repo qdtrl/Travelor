@@ -43,10 +43,7 @@ class TranslateService {
     
     
     func getLanguages(callBack: @escaping (Bool, Languages?) -> Void) {
-        guard let key = Bundle.main.object(forInfoDictionaryKey: "TRANSLATE_API_KEY") as? String, !key.isEmpty else {
-            print("API key does not exist")
-            return
-        }
+        let key = Bundle.main.object(forInfoDictionaryKey: "TRANSLATE_API_KEY") as! String
         
         var urlComponents = URLComponents(string: apiURLBase + "/languages")!
         urlComponents.queryItems = [
@@ -55,10 +52,7 @@ class TranslateService {
             URLQueryItem(name: "key", value: key)
         ]
         
-        guard let url = urlComponents.url else {
-            callBack(false, nil)
-            return
-        }
+        let url = urlComponents.url!
 
         let request = URLRequest(url: url)
 
@@ -81,14 +75,12 @@ class TranslateService {
                                 return
 
                             } catch {
-                                print("Error decoding JSON: \(error)")
                                 callBack(false, nil)
                                 return
                             }
                         }
                     } else {
                         // API request failed
-                         print("Error HTTP response status code: \(httpResponse.statusCode)")
                         callBack(false, nil)
                         return
                     }
@@ -101,10 +93,7 @@ class TranslateService {
         // Create a URL object with the API endpoint
         var urlComponents = URLComponents(string: apiURLBase)!
         
-        guard let key = Bundle.main.object(forInfoDictionaryKey: "TRANSLATE_API_KEY") as? String, !key.isEmpty else {
-            print("API key does not exist")
-            return
-        }
+        let key = Bundle.main.object(forInfoDictionaryKey: "TRANSLATE_API_KEY") as! String
         
         urlComponents.queryItems = [
             URLQueryItem(name: "q", value: text),
@@ -112,10 +101,7 @@ class TranslateService {
             URLQueryItem(name: "key", value: key)
         ]
         
-        guard let url = urlComponents.url else {
-            callBack(false, nil)
-            return
-        }
+        let url = urlComponents.url!
         
         // Create a URLRequest object with the URL
         let request = URLRequest(url: url)
@@ -141,7 +127,6 @@ class TranslateService {
                         }
                     } else {
                         // API request failed
-                         print("Error HTTP response status code: \(httpResponse.statusCode)")
                         callBack(false, nil)
                         return
                     }

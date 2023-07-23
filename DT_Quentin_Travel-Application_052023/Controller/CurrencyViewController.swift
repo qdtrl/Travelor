@@ -15,24 +15,27 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
     private var currencyChoice = "FR"
     var currencyCodes: [String] = []
 
-    @IBOutlet weak var networkStatus: UILabel!
     @IBOutlet weak var amountChoice: UITextField!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         amountChoice.resignFirstResponder()
-        
+
         guard let amountResult = amountChoice.text else {
             return
         }
                 
         amount = amountResult
         
+        loadingIndicator.startAnimating()
+        
         currency.getChangeFor(currency: currencyChoice, amount: amount) { (success, currencyChangeData) in
             guard let currencyChange = currencyChangeData, success == true else {
                return
             }
-            DispatchQueue.main.async {
-                self.changeRate.text = "\(currencyChange.result)$USD"
+            DispatchQueue.main.async { [ weak self ] in
+                self?.changeRate.text = "\(currencyChange.result)$USD"
+                self?.loadingIndicator.stopAnimating()
             }
          }
     }
@@ -42,10 +45,10 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if !networkManager.isReachable {
-            networkStatus.text = "Veuillez vous connectez à internet pour utiliser l'application"
-        } else {
-            networkStatus.isHidden = true
+        loadingIndicator.hidesWhenStopped = true
+
+        if networkManager.isReachable {
+            loadingIndicator.startAnimating()
             currencyPicker.dataSource = self
             currencyPicker.delegate = self
             currency.getSymbols { (success, symbolsData) in
@@ -53,18 +56,33 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
                     return
                 }
                 self.updateSymbols(symbols: symbolsData)
-                DispatchQueue.main.async {
-                    self.currencyPicker.reloadAllComponents()
+                DispatchQueue.main.async { [ weak self ] in
+                    self?.currencyPicker.reloadAllComponents()
                 }
+                
                 self.currency.getChangeFor(currency: self.currencyChoice, amount: self.amount) { (success, currencyChangeData) in
                     guard let currencyChange = currencyChangeData, success == true else {
                         return
                     }
-                    DispatchQueue.main.async {
-                        self.changeRate.text = "\(currencyChange.result)$USD"
+                    DispatchQueue.main.async { [ weak self ] in
+                        self?.changeRate.text = "\(currencyChange.result)$USD"
+                        self?.loadingIndicator.stopAnimating()
                     }
                 }
             }
+        } else {
+            let alert = UIAlertController(title: "Connection Impossible", message: "Cette application requiert d'être connecter à Internet", preferredStyle: .alert)
+              
+              // Add an action to the alert (OK button)
+              let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+                  exit(0)
+              }
+              
+              // Add the action to the alert
+              alert.addAction(okAction)
+              
+              // Present the alert to the user
+              present(alert, animated: true, completion: nil)
         }
     }
     
@@ -104,13 +122,16 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
         
         currencyChoice = "\(code)"
         
+        loadingIndicator.startAnimating()
         
         currency.getChangeFor(currency: currencyChoice, amount: amount) { (success, currencyChangeData) in
             guard let currencyChange = currencyChangeData, success == true else {
                return
             }
-            DispatchQueue.main.async {
-                self.changeRate.text = "\(currencyChange.result)$USD"
+            
+            DispatchQueue.main.async { [ weak self ] in
+                self?.changeRate.text = "\(currencyChange.result)$USD"
+                self?.loadingIndicator.stopAnimating()
             }
          }
     }

@@ -83,14 +83,10 @@ class WeatherService {
             lat = "\(location.latitude)"
             lon = "\(location.longitude)"
         }
-        guard let key = Bundle.main.object(forInfoDictionaryKey: "WEATHER_API_KEY") as? String, !key.isEmpty else {
-            print("API key does not exist")
-            return
-        }
+        
+        let key = Bundle.main.object(forInfoDictionaryKey: "WEATHER_API_KEY") as! String
                 
-        guard let url = URL(string: apiURLBase + "lat=\(lat)&lon=\(lon)&appid=\(key)&units=metric") else {
-            return
-        }
+        let url = URL(string: apiURLBase + "lat=\(lat)&lon=\(lon)&appid=\(key)&units=metric")!
                         
         // Create a URLRequest object with the URL
         var request = URLRequest(url: url)
@@ -118,45 +114,17 @@ class WeatherService {
                             return
 
                         } catch {
-                            print("Error decoding JSON: \(error)")
                             callBack(false, nil)
                             return
                         }
                     }
                 } else {
-                    // API request failed
-                        print("Error HTTP response status code: \(httpResponse.statusCode)")
                     callBack(false, nil)
                     return
                 }
             }
         }
         task.resume()
-    }
-}
-
-import CoreLocation
-
-class LocationManager: NSObject, CLLocationManagerDelegate {
-    private let locationManager = CLLocationManager()
-    @Published var latitude: Double = 0.0
-    @Published var longitude: Double = 0.0
-    
-    override init() {
-        super.init()
-        locationManager.delegate = self
-        locationManager.desiredAccuracy = kCLLocationAccuracyBest
-    }
-    
-    func requestLocation() {
-        locationManager.requestWhenInUseAuthorization()
-        locationManager.startUpdatingLocation()
-    }
-    
-    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
-        guard let location = locations.last else { return }
-        latitude = location.coordinate.latitude
-        longitude = location.coordinate.longitude
     }
 }
 

@@ -22,16 +22,11 @@ class CurrencyService {
     
     init(session: URLSession = URLSession(configuration: .default)) {
         self.session = session
-               
-      
     }
     
     func getChangeFor(currency: String, amount: String, callBack: @escaping (Bool, CurrencyRate?) -> Void) {
         // Create a URL object with the API endpoint
-        guard let url = URL(string: apiURLBase + "convert?to=\(currency)&from=USD&amount=\(amount)") else {
-            print("Invalid URL")
-            return
-        }
+        let url = URL(string: apiURLBase + "convert?to=\(currency)&from=USD&amount=\(amount)")!
 
         // Create a URLRequest object with the URL
         var request = URLRequest(url: url)
@@ -39,10 +34,7 @@ class CurrencyService {
         // Set the HTTP method
         request.httpMethod = "GET"
         
-        guard let key = Bundle.main.object(forInfoDictionaryKey: "CURRENCY_API_KEY") as? String, !key.isEmpty else {
-            print("API key does not exist")
-            return
-        }
+         let key = Bundle.main.object(forInfoDictionaryKey: "CURRENCY_API_KEY") as! String
         
         // Set the custom header
         request.addValue(key, forHTTPHeaderField: "apikey")
@@ -51,7 +43,7 @@ class CurrencyService {
         let task = session.dataTask(with: request) { (data, response, error) in
             // Check for any errors
             if let error = error {
-                print("Error: \(error)")
+                print(error)
                 callBack(false, nil)
                 return
             }
@@ -67,14 +59,12 @@ class CurrencyService {
                             return
 
                         } catch {
-                            print("Error decoding JSON: \(error)")
                             callBack(false, nil)
                             return
                         }
                     }
                 } else {
                     // API request failed
-                    print("Error HTTP response status code: \(httpResponse.statusCode)")
                     callBack(false, nil)
                     return
                 }
@@ -86,32 +76,23 @@ class CurrencyService {
 
     func getSymbols(callBack: @escaping (Bool, CurrencySymbols?) -> Void) {
         // Create a URL object with the API endpoint
-        guard let url = URL(string: apiURLBase + "symbols") else {
-            print("Invalid URL")
-            return
-        }
+        let url = URL(string: apiURLBase + "symbols")!
         // Create a URLRequest object with the URL
         var request = URLRequest(url: url)
         
         // Set the HTTP method
         request.httpMethod = "GET"
         
-        guard let key = Bundle.main.object(forInfoDictionaryKey: "CURRENCY_API_KEY") as? String, !key.isEmpty else {
-            print("API key does not exist")
-            return
-        }
+        let key = Bundle.main.object(forInfoDictionaryKey: "CURRENCY_API_KEY") as! String
+        
         // Set the custom header
         request.addValue(key, forHTTPHeaderField: "apikey")
-        
-        
-        // Create a URLSession object
-        let session = URLSession.shared
         
         // Create a data task
         let task = session.dataTask(with: request) { (data, response, error) in
             // Check for any errors
             if let error = error {
-                print("Error: \(error)")
+                print(error)
                 callBack(false, nil)
                 return
             }

@@ -13,7 +13,6 @@ class WeatherViewController: UIViewController {
     private let networkManager = NetworkManager.shared
 
 
-    @IBOutlet weak var networkStatus: UILabel!
     @IBOutlet weak var descriptionWeather: UILabel!
     @IBOutlet weak var minTemp: UILabel!
     @IBOutlet weak var maxTemp: UILabel!
@@ -21,6 +20,7 @@ class WeatherViewController: UIViewController {
     @IBOutlet weak var windArrow: UIImageView!
     @IBOutlet weak var windSpeed: UILabel!
     @IBOutlet weak var iconWeather: UIImageView!
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     @IBAction func segmentedLocation(_ sender: UISegmentedControl) {
         let selectedIndex = sender.selectedSegmentIndex
@@ -29,7 +29,7 @@ class WeatherViewController: UIViewController {
         } else {
             newyork = true
         }
-
+        loadingIndicator.startAnimating()
         weather.getWeather(newyork: newyork) { (success, weatherData) in
           guard let weatherData = weatherData, success == true else {
              return
@@ -40,16 +40,29 @@ class WeatherViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        if !networkManager.isReachable {
-            networkStatus.text = "Veuillez vous connectez à internet pour utiliser l'application"
-        } else {
-            networkStatus.isHidden = true
+        loadingIndicator.hidesWhenStopped = true
+        
+        if networkManager.isReachable  {
+            loadingIndicator.startAnimating()
             weather.getWeather(newyork: newyork) { (success, weatherData) in
                 guard let weatherData = weatherData, success == true else {
                     return
                 }
                 self.update(weather: weatherData)
             }
+        }  else {
+            let alert = UIAlertController(title: "Connection Impossible", message: "Cette application requiert d'être connecter à Internet", preferredStyle: .alert)
+              
+              // Add an action to the alert (OK button)
+              let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+                  exit(0)
+              }
+              
+              // Add the action to the alert
+              alert.addAction(okAction)
+              
+              // Present the alert to the user
+              present(alert, animated: true, completion: nil)
         }
     }
     
@@ -67,14 +80,15 @@ class WeatherViewController: UIViewController {
                 
                 if let data = data, let image = UIImage(data: data) {
                     // Update the UI on the main queue
-                    DispatchQueue.main.async {
-                        self.iconWeather.image = image
-                        self.windSpeed.text = "\(round(weather.wind.speed * 1.94384 * 10) / 10) nds"
-                        self.windArrow.transform = self.windArrow.transform.rotated(by: CGFloat(Double(weather.wind.deg) * .pi / 180.0))
-                        self.minTemp.text = "\(round(weather.main.temp_min  * 10) / 10)°"
-                        self.maxTemp.text = "\(round(weather.main.temp_max * 10) / 10)°"
-                        self.descriptionWeather.text = weather.weather[0].description
-                        self.titleWeather.text = weather.weather[0].main
+                    DispatchQueue.main.async { [ weak self ] in
+                        self?.iconWeather.image = image
+                        self?.windSpeed.text = "\(round(weather.wind.speed * 1.94384 * 10) / 10) nds"
+                        self?.windArrow.transform = (self?.windArrow.transform.rotated(by: CGFloat(Double(weather.wind.deg) * .pi / 180.0)))!
+                        self?.minTemp.text = "\(round(weather.main.temp_min  * 10) / 10)°"
+                        self?.maxTemp.text = "\(round(weather.main.temp_max * 10) / 10)°"
+                        self?.descriptionWeather.text = weather.weather[0].description
+                        self?.titleWeather.text = weather.weather[0].main
+                        self?.loadingIndicator.stopAnimating()
                     }
                 }
             }.resume() // Start the download task

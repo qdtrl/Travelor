@@ -83,6 +83,24 @@ class CurrencyServiceTestCase: XCTestCase {
         
     }
     
+    func testGetCurrencyShouldPostFailedCallBackIfNilData() {
+        // Given
+        let currencyService = CurrencyService(
+            session: URLSessionFake(data: nil,
+                                    response: FakeResponseData.responseOK,
+                                    error: nil))
+        
+        // When
+        let expectation = XCTestExpectation(description: "Wait for queue change.")
+        currencyService.getSymbols { (success, currency) in
+            
+            // Then
+            XCTAssertFalse(success)
+            XCTAssertNil(currency)
+            expectation.fulfill()
+        }
+    }
+    
     // Tests getCurrency - When all Ok
     func testGetCurrencyShouldPostSuccessCallbackIfNoErrorAndCorrectData() {
         // Given
@@ -301,6 +319,24 @@ class CurrencyServiceTestCase: XCTestCase {
         // Given
         let currencyService = CurrencyService(
             session: URLSessionFake(data: nil, response: nil, error: nil))
+        
+        // When
+        let symbolPicked = "USD"
+        let expectation = XCTestExpectation(description: "Wait for queue change.")
+        currencyService.getChangeFor(currency: symbolPicked, amount: "12") { (success, rate) in
+            
+            // Then
+            XCTAssertFalse(success)
+            XCTAssertNil(rate)
+            expectation.fulfill()
+        }
+        
+    }
+    
+    func testGetRateShouldPostFailedCallBackIfFalseData() {
+        // Given
+        let currencyService = CurrencyService(
+            session: URLSessionFake(data: nil, response: FakeResponseData.responseOK, error: nil))
         
         // When
         let symbolPicked = "USD"

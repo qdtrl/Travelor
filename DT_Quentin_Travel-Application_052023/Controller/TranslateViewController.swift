@@ -20,6 +20,8 @@ class TranslateViewController: UIViewController, UIPickerViewDataSource, UIPicke
     @IBOutlet weak var translation: UILabel!
     
     @IBOutlet weak var textToTranslate: UITextField!
+
+    @IBOutlet weak var loadingIndicator: UIActivityIndicatorView!
     
     @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         textToTranslate.resignFirstResponder()
@@ -27,24 +29,25 @@ class TranslateViewController: UIViewController, UIPickerViewDataSource, UIPicke
             print("Nothing to translate")
             return
         }
+        loadingIndicator.startAnimating()
+
         translate.getTranslationTo(text: text, target: languageChoice) { (success, translationData) in
             guard let translationData = translationData, success == true else {
                return
             }
-            DispatchQueue.main.async {
-                self.translation.text = translationData.data.translations[0].translatedText
+            DispatchQueue.main.async { [ weak self ] in
+                self?.translation.text = translationData.data.translations[0].translatedText
+                self?.loadingIndicator.stopAnimating()
             }
          }
     }
-    @IBOutlet weak var networkStatus: UILabel!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-
-        if !networkManager.isReachable {
-            networkStatus.text = "Veuillez vous connectez à internet pour utiliser l'application"
-        } else {
-            networkStatus.isHidden = true
+        loadingIndicator.hidesWhenStopped = true
+        
+        if networkManager.isReachable {
+            loadingIndicator.startAnimating()
             languagePicker.dataSource = self
             languagePicker.delegate = self
             textToTranslate.delegate = self
@@ -76,11 +79,25 @@ class TranslateViewController: UIViewController, UIPickerViewDataSource, UIPicke
                 
                 self.languageChoice = self.languagesCodes[0]
                 
-                DispatchQueue.main.async {
-                    self.textToTranslate.placeholder = "Entrez du text à traduire en " + self.languagesNames[0]
-                    self.languagePicker.reloadAllComponents()
+                DispatchQueue.main.async { [weak self ] in
+                    self?.textToTranslate.placeholder = "Entrez du text à traduire en " + (self?.languagesNames[0] ?? "")
+                    self?.languagePicker.reloadAllComponents()
+                    self?.loadingIndicator.stopAnimating()
                 }
             }
+        } else {
+            let alert = UIAlertController(title: "Connection Impossible", message: "Cette application requiert d'être connecter à Internet", preferredStyle: .alert)
+              
+              // Add an action to the alert (OK button)
+              let okAction = UIAlertAction(title: "OK", style: .default) { _ in
+                  exit(0)
+              }
+              
+              // Add the action to the alert
+              alert.addAction(okAction)
+              
+              // Present the alert to the user
+              present(alert, animated: true, completion: nil)
         }
     }
     
@@ -98,7 +115,8 @@ class TranslateViewController: UIViewController, UIPickerViewDataSource, UIPicke
        
     func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         // Get the selected currency code
-        
+        loadingIndicator.startAnimating()
+
         languageChoice = languagesCodes[row]
         if self.textToTranslate.text == "" {
             self.textToTranslate.placeholder = "Entrez du text à traduire en " + self.languagesNames[row]
@@ -111,8 +129,10 @@ class TranslateViewController: UIViewController, UIPickerViewDataSource, UIPicke
                 guard let translationData = translationData, success == true else {
                    return
                 }
-                DispatchQueue.main.async {
-                    self.translation.text = translationData.data.translations[0].translatedText
+
+                DispatchQueue.main.async { [ weak self ] in
+                    self?.translation.text = translationData.data.translations[0].translatedText
+                    self?.loadingIndicator.stopAnimating()
                 }
              }
         }
@@ -127,12 +147,16 @@ extension TranslateViewController: UITextFieldDelegate {
             print("Nothing to translate")
             return true
         }
+        
+        loadingIndicator.startAnimating()
+
         translate.getTranslationTo(text: text, target: languageChoice) { (success, translationData) in
             guard let translationData = translationData, success == true else {
                return
             }
-            DispatchQueue.main.async {
-                self.translation.text = translationData.data.translations[0].translatedText
+            DispatchQueue.main.async { [ weak self ] in
+                self?.translation.text = translationData.data.translations[0].translatedText
+                self?.loadingIndicator.stopAnimating()
             }
          }
         return true
