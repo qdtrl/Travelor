@@ -166,10 +166,10 @@
                                 </constraints>
                             </imageView>
                             <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="equalSpacing" translatesAutoresizingMaskIntoConstraints="NO" id="LQh-Pt-8PQ">
-                                <rect key="frame" x="20" y="143" width="320" height="326"/>
+                                <rect key="frame" x="20" y="143" width="353" height="326"/>
                                 <subviews>
                                     <textField opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="248" contentHorizontalAlignment="left" contentVerticalAlignment="top" borderStyle="roundedRect" textAlignment="center" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="pf0-jT-5h9">
-                                        <rect key="frame" x="0.0" y="0.0" width="320" height="200"/>
+                                        <rect key="frame" x="0.0" y="0.0" width="353" height="200"/>
                                         <color key="backgroundColor" red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="0.6966090818651679" colorSpace="custom" customColorSpace="sRGB"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="200" id="UG0-Lh-9YE"/>
@@ -178,7 +178,7 @@
                                         <textInputTraits key="textInputTraits" autocorrectionType="yes" keyboardAppearance="light"/>
                                     </textField>
                                     <pickerView contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="Nmq-bV-nQJ" userLabel="Into">
-                                        <rect key="frame" x="0.0" y="226" width="320" height="100"/>
+                                        <rect key="frame" x="0.0" y="226" width="353" height="100"/>
                                         <constraints>
                                             <constraint firstAttribute="height" constant="100" id="PZS-Mb-ERK"/>
                                         </constraints>
@@ -190,18 +190,15 @@
                                 </connections>
                             </stackView>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="top" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="" lineBreakMode="wordWrap" numberOfLines="0" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="Ct0-d6-755">
-                                <rect key="frame" x="20" y="509" width="300" height="0.0"/>
+                                <rect key="frame" x="20" y="509" width="353" height="0.0"/>
                                 <color key="backgroundColor" red="0.77647058823529413" green="0.77647058823529413" blue="0.78431372549019607" alpha="0.69761886077673252" colorSpace="custom" customColorSpace="sRGB"/>
-                                <constraints>
-                                    <constraint firstAttribute="width" constant="300" id="frG-Fg-FcC"/>
-                                </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                                 <size key="shadowOffset" width="0.0" height="1"/>
                             </label>
                             <activityIndicatorView opaque="NO" contentMode="scaleToFill" horizontalHuggingPriority="750" verticalHuggingPriority="750" style="medium" translatesAutoresizingMaskIntoConstraints="NO" id="CXe-ME-YlP">
-                                <rect key="frame" x="155" y="401" width="50" height="50"/>
+                                <rect key="frame" x="171.66666666666666" y="401" width="50" height="50"/>
                                 <constraints>
                                     <constraint firstAttribute="height" constant="50" id="Yof-uM-wlY"/>
                                     <constraint firstAttribute="width" constant="50" id="iWp-5t-rMZ"/>
