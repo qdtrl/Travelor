@@ -9,8 +9,8 @@ import UIKit
 
 class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     private let networkManager = NetworkManager.shared
-
     private let currency = CurrencyService()
+    
     private var amount = "1"
     private var currencyChoice = "FR"
     var currencyCodes: [String] = []
@@ -39,9 +39,9 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
             }
          }
     }
+    
     @IBOutlet weak var changeRate: UILabel!
     @IBOutlet weak var currencyPicker: UIPickerView!
-    
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -52,7 +52,7 @@ class CurrencyViewController: UIViewController, UIPickerViewDataSource, UIPicker
             currencyPicker.dataSource = self
             currencyPicker.delegate = self
             currency.getSymbols { (success, symbolsData) in
-                guard let symbolsData = symbolsData, success == true else {
+                guard let symbolsData = symbolsData else {
                     return
                 }
                 self.updateSymbols(symbols: symbolsData)

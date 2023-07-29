@@ -114,13 +114,11 @@ class TranslateService {
                         // API request was successful
                         if let data = data {
                             do {
-                                print(data)
                                 let translationData = try JSONDecoder().decode(Translations.self, from: data)
                                 callBack(true, translationData)
                                 return
 
                             } catch {
-                                print("Error decoding JSON: \(error)")
                                 callBack(false, nil)
                                 return
                             }

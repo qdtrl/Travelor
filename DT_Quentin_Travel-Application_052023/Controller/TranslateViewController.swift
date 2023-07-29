@@ -9,8 +9,8 @@ import UIKit
 
 class TranslateViewController: UIViewController, UIPickerViewDataSource, UIPickerViewDelegate {
     private let networkManager = NetworkManager.shared
-
     private let translate = TranslateService()
+    
     private var languageChoice: String = ""
     private var languageChoiceName: String = ""
     private var languagesNames: [String] = []
@@ -26,6 +26,7 @@ class TranslateViewController: UIViewController, UIPickerViewDataSource, UIPicke
     
     @IBAction func dismissKeyboard(_ sender: UITapGestureRecognizer) {
         textToTranslate.resignFirstResponder()
+        
         guard let text = textToTranslate.text else {
             print("Nothing to translate")
             return
@@ -50,6 +51,7 @@ class TranslateViewController: UIViewController, UIPickerViewDataSource, UIPicke
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         loadingIndicator.hidesWhenStopped = true
         
         if networkManager.isReachable {
